@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Hockey Analysis",
-    "section": "",
-    "text": "# 1. Load libraries (ensure they are installed)\nlibrary(dplyr)\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\nlibrary(ggplot2)\nlibrary(ggrepel)\nlibrary(viridis)\n\nLoading required package: viridisLite\n\n# 2. Hard-coded dataset for 2026\nhockey_legends &lt;- data.frame(\n  player = c(\"Alex Ovechkin\", \"Wayne Gretzky\", \"Gordie Howe\", \"Jaromír Jágr\", \n             \"Brett Hull\", \"Marcel Dionne\", \"Phil Esposito\", \"Mike Gartner\", \n             \"Mark Messier\", \"Steve Yzerman\"),\n  goals  = c(917, 894, 801, 766, 741, 731, 717, 708, 694, 692),\n  years  = c(21, 20, 32, 24, 19, 18, 18, 19, 25, 22),\n  gp     = c(1460, 1487, 1767, 1733, 1269, 1348, 1282, 1432, 1756, 1514)\n)\n\n# 3. Calculate metrics using classic dplyr syntax\nhockey_legends &lt;- mutate(hockey_legends, goals_per_game = goals / gp)\n\n# 4. Generate the beautiful graph\nggplot(hockey_legends, aes(x = years, y = goals)) +\n  # Add background efficiency lines (30, 40, 50 goals per season)\n  geom_abline(intercept = 0, slope = c(30, 40, 50), color = \"grey90\", linetype = \"dotted\") +\n  # Points with plasma color scale\n  geom_point(aes(size = goals_per_game, color = goals_per_game), alpha = 0.8) +\n  # Non-overlapping labels\n  geom_text_repel(aes(label = player), \n                  size = 4, \n                  fontface = \"bold\",\n                  box.padding = 0.5) +\n  # Visual styling\n  scale_color_viridis_c(option = \"plasma\", name = \"Goals Per Game\") +\n  scale_size_continuous(range = c(3, 10), guide = \"none\") +\n  scale_x_continuous(limits = c(15, 35), breaks = seq(15, 35, 5)) +\n  scale_y_continuous(limits = c(650, 950)) +\n  theme_minimal() +\n  labs(\n    title = \"NHL Immortals: Longevity vs. Total Production\",\n    subtitle = \"Positioning based on seasons played and total career goals (Top 10 All-Time)\",\n    x = \"Career Length (Seasons Played)\",\n    y = \"Total Career Goals\",\n    caption = \"Ovechkin stands as the all-time leader as of 2026.\"\n  ) +\n  theme(\n    plot.title = element_text(face = \"bold\", size = 18),\n    plot.subtitle = element_text(size = 12, color = \"grey40\"),\n    legend.position = \"bottom\"\n  )"
-  },
-  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
