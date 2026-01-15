@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Hockey Analysis",
+    "section": "",
+    "text": "In simple terms, most hockey legends hit their “goal-scoring prime” between the ages of 24 and 27. This is the biological sweet spot where a player’s physical explosive power, reaction speed, and professional experience all peak at the same time. During these years, superstars like Wayne Gretzky and Mario Lemieux were scoring at a rate that seemed almost unfair, often averaging nearly a goal every single game.\nHowever, the “all-time” leaders are special because they found ways to stay productive long after their physical peak. While most players see their scoring drop off a cliff after age 30, Alex Ovechkin became a mathematical anomaly; he continued to score like a 25-year-old well into his late 30s. Essentially, while Gretzky had the highest “mountain top” (scoring a record 92 goals in a single season at age 21), Ovechkin created the longest “high plateau,” staying near his peak for twice as long as the average player. Gordie Howe took a third path, using extreme longevity to keep scoring consistently until he was over 50 years old, proving that in hockey, you can reach the top through either a massive burst of brilliance or a lifelong marathon of steady work.\nHere is a graph so you can visualize these players “prime”:\n\n\n\n\n\n\n\n\n\nThe graph illustrates the divergent paths to NHL greatness, showing that while most elite goal-scorers share a common peak age of 21 to 27, their “decay curves” vary significantly. Wayne Gretzky represents the highest peak intensity, reaching a statistical summit of 92 goals before transitioning into a playmaking role, whereas Alex Ovechkin defies standard biological aging by maintaining a high-scoring “plateau” well into his late 30s. In contrast, Gordie Howe and Jaromir Jagr represent the extreme of career longevity, with their curves stretching across four decades, proving that the all-time goals record can be reached either through a massive burst of youthful efficiency or a historic marathon of persistence."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About Me",
+    "section": "",
+    "text": "My name is Collin Gates, I am a 2nd year student at New College of Florida. I created this project on Janurary 15th, 2026 as a part of the Techne ISP with Preceptor David Kane.\nThis project includes some data about all-time hockey greats, such as Wayne Gretzky, and how their goal scoring totals changed throughout the years of their career."
+  },
+  {
+    "objectID": "analysis.html",
+    "href": "analysis.html",
+    "title": "All Time Goal Leaders in Hockey",
+    "section": "",
+    "text": "# A tibble: 10 × 3\n   Rank  Player        Goals\n   &lt;chr&gt; &lt;chr&gt;         &lt;int&gt;\n 1 1.    Alex Ovechkin   917\n 2 2.    Wayne Gretzky   894\n 3 3.    Gordie Howe     801\n 4 4.    Jaromír Jágr    766\n 5 5.    Brett Hull      741\n 6 6.    Marcel Dionne   731\n 7 7.    Phil Esposito   717\n 8 8.    Mike Gartner    708\n 9 9.    Mark Messier    694\n10 10.   Steve Yzerman   692\n\n\n\n\n# A tibble: 0 × 7\n# ℹ 7 variables: Player &lt;chr&gt;, Goals &lt;dbl&gt;, Points &lt;dbl&gt;, Years &lt;dbl&gt;,\n#   Goals_Per_Year &lt;dbl&gt;, Points_Per_Year &lt;dbl&gt;, Elite_Status &lt;lgl&gt;\n\n\n\n\nLoading required package: viridisLite\n\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead."
+  }
+]

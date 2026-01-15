@@ -1,0 +1,128 @@
+---
+title: "Hockey Analysis"
+author: Collin Gates
+execute: 
+  echo: false
+---
+
+```{r}
+#| message: false
+#| warning: false
+# 1. Load libraries (ensure they are installed)
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(viridis)
+
+# 2. Hard-coded dataset for 2026
+hockey_legends <- data.frame(
+  player = c("Alex Ovechkin", "Wayne Gretzky", "Gordie Howe", "Jaromír Jágr", 
+             "Brett Hull", "Marcel Dionne", "Phil Esposito", "Mike Gartner", 
+             "Mark Messier", "Steve Yzerman"),
+  goals  = c(917, 894, 801, 766, 741, 731, 717, 708, 694, 692),
+  years  = c(21, 20, 32, 24, 19, 18, 18, 19, 25, 22),
+  gp     = c(1460, 1487, 1767, 1733, 1269, 1348, 1282, 1432, 1756, 1514)
+)
+
+# 3. Calculate metrics using classic dplyr syntax
+hockey_legends <- mutate(hockey_legends, goals_per_game = goals / gp)
+
+# 4. Generate the beautiful graph
+ggplot(hockey_legends, aes(x = years, y = goals)) +
+  # Add background efficiency lines (30, 40, 50 goals per season)
+  geom_abline(intercept = 0, slope = c(30, 40, 50), color = "grey90", linetype = "dotted") +
+  # Points with plasma color scale
+  geom_point(aes(size = goals_per_game, color = goals_per_game), alpha = 0.8) +
+  # Non-overlapping labels
+  geom_text_repel(aes(label = player), 
+                  size = 4, 
+                  fontface = "bold",
+                  box.padding = 0.5) +
+  # Visual styling
+  scale_color_viridis_c(option = "plasma", name = "Goals Per Game") +
+  scale_size_continuous(range = c(3, 10), guide = "none") +
+  scale_x_continuous(limits = c(15, 35), breaks = seq(15, 35, 5)) +
+  scale_y_continuous(limits = c(650, 950)) +
+  theme_minimal() +
+  labs(
+    title = "NHL Immortals: Longevity vs. Total Production",
+    subtitle = "Positioning based on seasons played and total career goals (Top 10 All-Time)",
+    x = "Career Length (Seasons Played)",
+    y = "Total Career Goals",
+    caption = "Ovechkin stands as the all-time leader as of 2026."
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    plot.subtitle = element_text(size = 12, color = "grey40"),
+    legend.position = "bottom"
+  )
+```
+
+In simple terms, most hockey legends hit their "goal-scoring prime" between the ages of 24 and 27. This is the biological sweet spot where a player's physical explosive power, reaction speed, and professional experience all peak at the same time. During these years, superstars like Wayne Gretzky and Mario Lemieux were scoring at a rate that seemed almost unfair, often averaging nearly a goal every single game.
+
+However, the "all-time" leaders are special because they found ways to stay productive long after their physical peak. While most players see their scoring drop off a cliff after age 30, Alex Ovechkin became a mathematical anomaly; he continued to score like a 25-year-old well into his late 30s. Essentially, while Gretzky had the highest "mountain top" (scoring a record 92 goals in a single season at age 21), Ovechkin created the longest "high plateau," staying near his peak for twice as long as the average player. Gordie Howe took a third path, using extreme longevity to keep scoring consistently until he was over 50 years old, proving that in hockey, you can reach the top through either a massive burst of brilliance or a lifelong marathon of steady work.
+
+Here is a graph so you can visualize these players "prime":
+
+
+```{r}
+# R Code for NHL Goal Scoring Aging Curves
+library(ggplot2)
+library(dplyr)
+
+# 1. Manually Build the Dataset
+gretzky <- data.frame(
+  Age = 18:38,
+  Goals = c(51, 55, 92, 71, 87, 73, 52, 62, 40, 54, 40, 41, 31, 16, 38, 11, 23, 25, 23, 9, 9),
+  Player = "Wayne Gretzky"
+)
+
+ovechkin <- data.frame(
+  Age = 20:40,
+  Goals = c(52, 46, 65, 56, 50, 32, 38, 32, 51, 53, 50, 33, 49, 51, 48, 24, 50, 42, 31, 27, 26),
+  Player = "Alex Ovechkin"
+)
+
+howe <- data.frame(
+  Age = c(18, 20, 22, 24, 25, 27, 28, 30, 32, 34, 35, 37, 40, 41, 51),
+  Goals = c(7, 22, 47, 49, 44, 33, 44, 33, 38, 31, 29, 29, 44, 23, 15),
+  Player = "Gordie Howe"
+)
+
+jagr <- data.frame(
+  Age = c(18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 31, 33, 34, 40, 41, 42, 43, 44, 45),
+  Goals = c(27, 32, 34, 32, 70, 62, 47, 35, 44, 52, 31, 54, 30, 19, 24, 17, 27, 16, 1),
+  Player = "Jaromir Jagr"
+)
+
+# Combine datasets
+all_data <- rbind(gretzky, ovechkin, howe, jagr)
+
+# 2. Create the Plot
+ggplot(all_data, aes(x = Age, y = Goals, color = Player, group = Player)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  # Use high-contrast colors
+  scale_color_manual(values = c(
+    "Wayne Gretzky" = "#4169E1", 
+    "Alex Ovechkin" = "#DC143C", 
+    "Gordie Howe" = "#228B22", 
+    "Jaromir Jagr" = "#FFD700"
+  )) +
+  labs(
+    title = "NHL Goal Scoring Aging Curves",
+    subtitle = "Annual Goals vs. Age for All-Time Leaders",
+    x = "Age (Years)",
+    y = "Goals per Season",
+    caption = "Source: Hockey-Reference | Viz: R ggplot2"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(color = "grey30", margin = margin(b = 10)),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+The graph illustrates the divergent paths to NHL greatness, showing that while most elite goal-scorers share a common peak age of 21 to 27, their "decay curves" vary significantly. Wayne Gretzky represents the highest peak intensity, reaching a statistical summit of 92 goals before transitioning into a playmaking role, whereas Alex Ovechkin defies standard biological aging by maintaining a high-scoring "plateau" well into his late 30s. In contrast, Gordie Howe and Jaromir Jagr represent the extreme of career longevity, with their curves stretching across four decades, proving that the all-time goals record can be reached either through a massive burst of youthful efficiency or a historic marathon of persistence.

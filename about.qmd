@@ -1,0 +1,8 @@
+---
+title: "About Me"
+---
+
+My name is Collin Gates, I am a 2nd year student at New College of Florida.
+I created this project on Janurary 15th, 2026 as a part of the Techne ISP with Preceptor David Kane.
+
+This project includes some data about all-time hockey greats, such as Wayne Gretzky, and how their goal scoring totals changed throughout the years of their career.

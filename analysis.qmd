@@ -1,0 +1,139 @@
+---
+title: "All Time Goal Leaders in Hockey"
+author: Collin Gates
+format: html
+execute: 
+  echo: false
+---
+
+
+```{r}
+#| message: false
+#| warning: false
+# 1. Ensure required packages are installed and loaded
+if (!requireNamespace("rvest", quietly = TRUE)) install.packages("rvest", repos = "https://cran.rstudio.com/")
+if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr", repos = "https://cran.rstudio.com/")
+
+library(rvest)
+library(dplyr)
+
+# 2. Define the URL for all-time NHL goal leaders
+url <- "https://www.hockey-reference.com/leaders/goals_career.html"
+
+# 3. Read the page and extract ALL tables
+tables <- read_html(url) |> html_table()
+
+# 4. Find the correct table (usually the first or largest one)
+# We look for a table that has a column named "Player" and "G" (Goals)
+hockey_leaders <- tables[[1]] |> 
+  as_tibble() |> 
+  select(Rank, Player, Goals = G) |>
+  # Remove rows that repeat header info or are empty
+  filter(!is.na(as.numeric(Rank))) |>
+  slice_head(n = 10)
+
+# 5. Clean up the names (remove the Hall of Fame asterisk)
+hockey_leaders <- hockey_leaders |>
+  mutate(Player = gsub("\\*", "", Player))
+
+# Display the results
+print(hockey_leaders)
+```
+
+
+```{r}
+library(rvest)
+library(dplyr)
+library(stringr)
+
+# 1. Read the page
+url <- "https://www.hockey-reference.com/leaders/points_career.html"
+page <- read_html(url)
+
+# 2. Scrape the specific elements manually
+# These CSS selectors target the player names and their total points/goals
+players <- page |> html_elements("td[data-stat='player']") |> html_text()
+goals   <- page |> html_elements("td[data-stat='g']") |> html_text()
+points  <- page |> html_elements("td[data-stat='pts']") |> html_text()
+years   <- page |> html_elements("td[data-stat='years']") |> html_text()
+
+# 3. Combine into a clean data frame
+hockey_longevity <- tibble(
+  Player = players,
+  Goals  = goals,
+  Points = points,
+  Years  = years
+) |>
+  # Convert types and clean Hall of Fame markers (*)
+  mutate(
+    Player = str_remove_all(Player, "\\*"),
+    across(c(Goals, Points, Years), ~as.numeric(str_remove_all(., ",")))
+  ) |>
+  slice_head(n = 15) |>
+  # 4. Add Career Longevity Metrics
+  mutate(
+    Goals_Per_Year  = round(Goals / Years, 1),
+    Points_Per_Year = round(Points / Years, 1),
+    Elite_Status    = ifelse(Points_Per_Year > 100, "Superstar", "Legendary Longevity")
+  )
+
+print(hockey_longevity)
+```
+
+
+```{r}
+# 1. Setup - Install and load necessary libraries
+if (!requireNamespace("rvest", quietly = TRUE)) install.packages("rvest", repos = "https://cran.rstudio.com/")
+if (!requireNamespace("ggrepel", quietly = TRUE)) install.packages("ggrepel", repos = "https://cran.rstudio.com/")
+
+library(rvest)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(ggrepel)
+library(viridis)
+
+# 2. Robust Scraping (using specific data-stat attributes)
+url <- "https://www.hockey-reference.com/leaders/goals_career.html"
+page <- read_html(url)
+
+hockey_data <- tibble(
+  player = page |> html_elements("td[data-stat='player']") |> html_text(),
+  goals  = page |> html_elements("td[data-stat='g']") |> html_text(),
+  years  = page |> html_elements("td[data-stat='years']") |> html_text(),
+  games  = page |> html_elements("td[data-stat='gp']") |> html_text()
+) |>
+  # 3. Clean and Transform
+  mutate(
+    player = str_remove_all(player, "\\*"),
+    across(c(goals, years, games), ~as.numeric(str_remove_all(., ","))),
+    goals_per_game = goals / games
+  ) |>
+  slice_head(n = 25) # Look at top 25 all-time to find trends
+
+# 4. Create the Visualization
+hockey_data |> 
+  ggplot(aes(x = years, y = goals)) +
+  # Add a background trend line
+  geom_smooth(method = "lm", color = "grey80", se = FALSE, linetype = "dashed", size = 0.5) +
+  # Plot the players
+  geom_point(aes(size = goals_per_game, color = goals_per_game), alpha = 0.8) +
+  # Add non-overlapping labels
+  geom_text_repel(aes(label = player), size = 3.5, box.padding = 0.5) +
+  # Styling and Scales
+  scale_color_viridis_c(option = "magma", name = "Goals Per Game") +
+  scale_size_continuous(range = c(2, 8), name = "Efficiency") +
+  theme_minimal(base_family = "sans") +
+  labs(
+    title = "NHL Immortals: Career Longevity vs. Total Goals",
+    subtitle = "Comparing the pure volume of Howe/Ovechkin against the peak efficiency of Gretzky/Bossy",
+    x = "Career Length (Seasons Played)",
+    y = "Total Career Goals",
+    caption = "Data: Hockey-Reference | Viz: R Tidyverse"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
